@@ -1,0 +1,27 @@
+---
+description: Module scope shape based on modules/auth
+globs: src/modules/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Module Scope Conventions
+
+Use `src/modules/auth` as the reference structure:
+
+- `pages/<page>/index.tsx` for each page.
+- `pages/<page>/components/*` for page-local UI.
+- `atoms/*` for module state.
+- `layout/*` for module-specific layout wrappers.
+- `types/*` and `utils/*` for module contracts/helpers.
+
+## Required patterns
+
+- Organize by domain scope (`auth`, `brands`, `categories`, `checkout`, `discovery`).
+- Keep page logic close to its page folder.
+- Keep module imports lower-case (e.g. `@/modules/auth/...`).
+
+## Prohibited patterns
+
+- Mixing `Auth` and `auth` path casing.
+- Adding `route-entry` folders for page resolution.
+- Creating a global type dump for module-local types.

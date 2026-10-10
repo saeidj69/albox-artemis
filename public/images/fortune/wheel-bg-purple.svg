@@ -1,0 +1,24 @@
+<svg
+  width="320"
+  height="320"
+  viewBox="0 0 320 320"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle cx="160" cy="160" r="160" fill="#7450CB" />
+  <circle cx="160" cy="160" r="157.4" fill="url(#paint0_radial_purple)" />
+  <defs>
+    <radialGradient
+      id="paint0_radial_purple"
+      cx="0"
+      cy="0"
+      r="1"
+      gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(160 160) scale(157.4)"
+    >
+      <stop stop-color="#5D3FA5" />
+      <stop offset="0.84946" stop-color="#9C7BEA" />
+      <stop offset="1" stop-color="#7450CB" />
+    </radialGradient>
+  </defs>
+</svg>

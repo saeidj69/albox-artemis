@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "Sentry": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@sentry/mcp-server@latest",
+        "--access-token=${SENTRY_ACCESS_TOKEN}",
+        "--host=sentry.allbox.work"
+      ]
+    }
+  }
+}

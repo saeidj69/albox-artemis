@@ -1,0 +1,27 @@
+---
+description: CSS layering and Tailwind usage rules
+globs: src/**/*.{css,tsx}
+alwaysApply: false
+---
+
+# Styles Conventions
+
+- Keep `src/app/globals.css` as style entrypoint only.
+- Style layer order must remain:
+  1. `tokens.css`
+  2. `base.css`
+  3. `typography.css`
+  4. `animations.css`
+  5. `globals.css` glue
+
+## Required patterns
+
+- Use Tailwind utilities for component layout/state/responsive styling.
+- Keep tokens, keyframes, and global element defaults in shared style files.
+- Module page/component styles should stay colocated with the module page when specialized.
+
+## Prohibited patterns
+
+- Re-growing a monolithic `globals.css`.
+- Duplicating design tokens across multiple files.
+- Page-specific style hacks in app route files when they belong to module pages.

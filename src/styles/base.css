@@ -1,0 +1,53 @@
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-iransans), sans-serif;
+  @apply bg-primary-600;
+}
+
+.container {
+  @apply w-app mx-auto px-4;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/** Hide scrollbar (mobile-only app) */
+/* Hide scrollbar for all elements in WebKit browsers */
+*::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* prevent text selection */
+* {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS Safari auto-zooms inputs whose effective font-size < 16px on focus.
+   Floor every form control at 16px so focus never triggers a zoom-in.
+   max() preserves any intentionally larger sizing. */
+input,
+textarea,
+select {
+  font-size: max(16px, 1em) !important;
+}
+
+@utility w-app {
+  @apply mx-auto w-full max-w-md;
+}

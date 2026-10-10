@@ -1,0 +1,4 @@
+export const CASHBACK_BADGE_LABEL = 'بازگشت اعتبار'
+
+export const CASHBACK_PREVIEW_INITIAL_DELAY_MS = 500
+export const CASHBACK_PREVIEW_DURATION_MS = 3000

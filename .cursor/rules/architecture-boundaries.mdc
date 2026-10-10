@@ -1,0 +1,23 @@
+---
+description: Enforce architecture dependency boundaries
+alwaysApply: true
+---
+
+# Architecture Boundaries
+
+- Direction: `app -> modules -> components/lib/api`.
+- `src/app` routes stay thin and delegate to `src/modules/<scope>/pages/*`.
+- `src/components` and `src/lib` are shared layers and must not import from `src/modules`.
+- `src/api` is generated and can be consumed by modules/shared, never edited manually.
+
+## Required patterns
+
+- Keep domain logic in module scopes (`src/modules/auth`, `src/modules/brands`, etc.).
+- Inside a module scope, colocate page-specific logic under `pages/*`.
+- Cross-module imports should use stable module surfaces when available.
+
+## Prohibited patterns
+
+- Circular imports across `app`, `modules`, `components`, and `lib`.
+- Importing `src/modules/*` from shared UI primitives.
+- Introducing `route-entry` indirection for module pages.

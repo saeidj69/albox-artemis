@@ -1,0 +1,98 @@
+@theme inline {
+  --font-iransans: var(--font-iransans);
+
+  --color-primary-50: #e6f3f1;
+  --color-primary-100: #c2e1dc;
+  --color-primary-200: #9acdc6;
+  --color-primary-300: #6fb6ae;
+  --color-primary-400: #3a9c92;
+  --color-primary-500: #007a72;
+  --color-primary-600: #005049;
+  --color-primary-700: #00403b;
+  --color-primary-800: #00302c;
+  --color-primary-900: #00221f;
+  --color-primary-950: #001514;
+
+  --color-secondary-50: #e8fdf0;
+  --color-secondary-100: #d1fae1;
+  --color-secondary-200: #a2f6c2;
+  --color-secondary-300: #74f1a4;
+  --color-secondary-400: #45ed85;
+  --color-secondary-500: #17e867;
+  --color-secondary-600: #0d9e42;
+  --color-secondary-700: #11a64a;
+  --color-secondary-800: #0c8038;
+  --color-secondary-900: #0a5929;
+  --color-secondary-950: #053316;
+
+  --color-text-primary: #303232;
+  --color-text-secondary: #696d6d;
+  --color-text-disabled: #9da3a2;
+  --color-text-inverse: #ffffff;
+  --color-text-link: #3abdaf;
+  --color-text-error: #d32f2f;
+
+  --color-background-main: #ffffff;
+  --color-background-secondary: #f8fafa;
+  --color-background-darker: #f2f4f4;
+  --color-background-disabled: #e2e4e4;
+  --color-background-discount: #d32f2f;
+  --color-background-cashback: #f3fdf7;
+
+  --color-success-dark: #1f7a34;
+  --color-success-main: #28a745;
+  --color-success-light: #d0efd9;
+  --color-success-lighter: #f0fcf3;
+
+  --color-error-dark: #a31414;
+  --color-error-main: #d32f2f;
+  --color-error-light: #fdf3f3;
+  --color-error-lighter: #ffd8d8;
+
+  --color-warning-dark: #b28403;
+  --color-warning-main: #edb825;
+  --color-warning-light: #fceabb;
+  --color-warning-lighter: #fffaed;
+
+  --color-info-dark: #036799;
+  --color-info-main: #0ea5e9;
+  --color-info-light: #bee7f6;
+  --color-info-lighter: #effaff;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-border-darker: #b1b9b8;
+  --color-border-main: #d5d9d8;
+  --color-border-lighter: #f0f3f3;
+
+  --radius-brand: 12px;
+
+  --animate-duration-fast: 200ms;
+  --animate-duration-normal: 350ms;
+  --animate-duration-slow: 500ms;
+
+  --animate-fade-in: fade-in var(--animate-duration-normal) ease-out both;
+  --animate-slide-up: slide-up var(--animate-duration-normal) ease-out both;
+  --animate-slide-down: slide-down var(--animate-duration-normal) ease-out both;
+  --animate-slide-left: slide-left var(--animate-duration-normal) ease-out both;
+  --animate-slide-right: slide-right var(--animate-duration-normal) ease-out
+    both;
+  --animate-scale-in: scale-in var(--animate-duration-normal) ease-out both;
+  --animate-bg-position: bg-position 2000ms infinite alternate;
+  --animate-blink: blink 1s infinite;
+  --animate-accordion-down: accordion-down var(--animate-duration-fast) ease-out
+    both;
+  --animate-accordion-up: accordion-up var(--animate-duration-fast) ease-out
+    both;
+  --animate-cart-fly-ball: cart-fly-ball 650ms cubic-bezier(0.3, 0, 0.7, 1) both;
+  --animate-cart-fly-spin: cart-fly-spin 650ms linear both;
+  --animate-goal-text-pop: goal-text-pop 700ms ease-out both;
+  --animate-goal-bump: goal-bump 500ms ease-out both;
+  --animate-mac-dock-bounce: mac-dock-bounce 500ms ease-in-out infinite;
+  --animate-path-dash-march: path-dash-march 1.2s linear infinite;
+  --animate-nmv-progress-fill: nmv-progress-fill 900ms ease-out both;
+  --animate-nmv-step-pop: nmv-step-pop 1100ms ease-out both;
+  --animate-nmv-step-activate: nmv-step-activate 1ms linear both;
+  --animate-nmv-edge-lit: nmv-edge-lit 1ms linear both;
+}

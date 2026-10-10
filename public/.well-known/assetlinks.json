@@ -1,0 +1,36 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.allbox.app",
+      "sha256_cert_fingerprints": [
+        "BD:21:36:69:F9:77:42:54:1D:0C:8A:56:71:F1:AD:D4:D8:C1:D4:65:27:9C:1F:41:19:8C:16:D2:4E:57:BD:61"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.allbox.app.dev",
+      "sha256_cert_fingerprints": [
+        "AA:7B:1A:2A:2E:02:1F:87:D0:C5:E0:BD:84:71:A3:3C:34:85:C7:65:C0:A2:96:0E:B3:EF:C0:5A:8B:EA:B1:8D"
+      ]
+    }
+  },
+  {
+    "relation": ["check_validation"],
+    "target": {
+      "namespace": "cafebazaar_twa",
+      "package_name": "com.allbox.app"
+    }
+  },
+  {
+    "relation": ["check_validation"],
+    "target": {
+      "namespace": "cafebazaar_twa",
+      "package_name": "com.allbox.app.dev"
+    }
+  }
+]

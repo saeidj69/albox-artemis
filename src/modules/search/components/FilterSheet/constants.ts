@@ -1,0 +1,1 @@
+export const FILTER_SHEET_BRANDS_PAGE_SIZE = 30

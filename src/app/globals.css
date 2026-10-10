@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+@plugin 'tailwindcss-animate';
+@plugin 'extra-tailwindcss-safe-area';
+
+@import '../styles/tokens.css';
+@import '../styles/base.css';
+@import '../styles/typography.css';
+@import '../styles/animations.css';

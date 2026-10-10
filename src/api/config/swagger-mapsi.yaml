@@ -1,0 +1,721 @@
+openapi: 3.0.3
+info:
+  title: Mapsi API
+  description: Tapsi map services OpenAPI spec. Runtime requests use MAPSI_BASE_URL.
+  version: 1.2.0
+servers:
+  - url: https://allbox.surenamarkets.com/mapsi/api/v1
+tags:
+  - name: ETA/D
+    description: Provides Estimated Time of Arrival/Delivery
+  - name: Navigation
+    description: Provides Navigation Services
+  - name: Search
+    description: Provides Search by Query and Location
+  - name: Geofence
+    description: Provides Subdivision and Zones by Location
+  - name: Reverse Geocoding
+    description: Provides Address and Neighborhood by Location
+  - name: Geolocation
+    description: Provides Location by Cellulars, Wi-Fis and GPS Locations Around
+paths:
+  /routing/eta:
+    post:
+      operationId: getEta
+      tags:
+        - ETA/D
+      summary: Provides Estimated Time of Arrival/Delivery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ETARequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ETASuccessResponse'
+      security:
+        - api_key: []
+  /routing/batch-eta:
+    post:
+      operationId: getBatchEta
+      tags:
+        - ETA/D
+      summary: Provides Estimated Time of Arrival/Delivery (batch)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchETARequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchETASuccessResponse'
+      security:
+        - api_key: []
+  /navigation/route:
+    post:
+      operationId: getNavigationRoute
+      tags:
+        - Navigation
+      summary: Provides Point to Point Navigation Route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NavigationRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NavigationSuccessResponse'
+      security:
+        - api_key: []
+  /navigation/nearest:
+    post:
+      operationId: getNearestLocation
+      tags:
+        - Navigation
+      summary: Provides Nearest Way Matched Location by Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NearestRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NearestSuccessResponse'
+      security:
+        - api_key: []
+  /navigation/match:
+    post:
+      operationId: matchLocations
+      tags:
+        - Navigation
+      summary: Provides the Way Matched by Locations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchingRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchingSuccessResponse'
+      security:
+        - api_key: []
+  /navigation/tsp:
+    post:
+      operationId: getTspRoute
+      tags:
+        - Navigation
+      summary: Provides the Traveling Salesman Path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TSPRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TSPSuccessResponse'
+      security:
+        - api_key: []
+  /search/search:
+    post:
+      operationId: searchAddresses
+      tags:
+        - Search
+      summary: Provides Search by Query and Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchSuccessResponse'
+      security:
+        - api_key: []
+  /geofence/subdivision:
+    post:
+      operationId: getSubdivision
+      tags:
+        - Geofence
+      summary: Provides Subdivision by Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubdivisionRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubdivisionSuccessResponse'
+      security:
+        - api_key: []
+  /geofence/active-zone:
+    post:
+      operationId: getActiveZone
+      tags:
+        - Geofence
+      summary: Provides Active Zone by Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActiveZoneRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveZoneSuccessResponse'
+      security:
+        - api_key: []
+  /reverse-geocoding/reverse:
+    post:
+      operationId: reverseGeocode
+      tags:
+        - Reverse Geocoding
+      summary: Provides Address and Neighborhood by Location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseGeocodingRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReverseGeocodingResponse'
+      security:
+        - api_key: []
+  /location/geolocate:
+    post:
+      operationId: geolocate
+      tags:
+        - Geolocation
+      summary: Provides Location by Cellulars, Wi-Fis and GPS Locations Around
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeolocateRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeolocateResponse'
+      security:
+        - api_key: []
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: x-tapsi-api-key
+      in: header
+  schemas:
+    Location:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: float
+          example: 35.789704
+        longitude:
+          type: number
+          format: float
+          example: 51.375159
+      description: Location latitude and longitude
+    Region:
+      type: object
+      properties:
+        name:
+          type: string
+        nameFa:
+          type: string
+          nullable: true
+    Duration:
+      type: object
+      properties:
+        value:
+          type: number
+          format: float
+        text:
+          type: string
+    Distance:
+      type: object
+      properties:
+        value:
+          type: number
+          format: float
+        text:
+          type: string
+    Geometry:
+      type: string
+      description: Geometry Polyline
+    Profile:
+      type: string
+      enum:
+        - PROFILE_CAR
+        - PROFILE_BIKE
+        - PROFILE_CAR_TRAFFICLESS
+        - PROFILE_BIKE_TRAFFICLESS
+    ProfileBikeCar:
+      type: string
+      enum:
+        - PROFILE_CAR
+        - PROFILE_BIKE
+    ETARequest:
+      type: object
+      required:
+        - origins
+        - destinations
+      properties:
+        origins:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        destinations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        profile:
+          $ref: '#/components/schemas/Profile'
+    ETASuccessResponse:
+      type: object
+      properties:
+        etaAndDistances:
+          type: array
+          items:
+            type: object
+            properties:
+              elements:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    distance:
+                      type: integer
+                      format: int32
+                    eta:
+                      type: integer
+                      format: int32
+    BatchETARequest:
+      type: object
+      properties:
+        requests:
+          type: array
+          items:
+            type: object
+            properties:
+              origin:
+                $ref: '#/components/schemas/Location'
+              destination:
+                $ref: '#/components/schemas/Location'
+              profile:
+                $ref: '#/components/schemas/Profile'
+    BatchETASuccessResponse:
+      type: object
+      properties:
+        etaResults:
+          type: array
+          items:
+            type: object
+            properties:
+              distance:
+                type: integer
+                format: int32
+              eta:
+                type: integer
+                format: int32
+    NavigationRequest:
+      type: object
+      required:
+        - origin
+        - destination
+      properties:
+        origin:
+          $ref: '#/components/schemas/Location'
+        destination:
+          $ref: '#/components/schemas/Location'
+        middleDestinations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        bearing:
+          type: integer
+          format: int64
+        profile:
+          $ref: '#/components/schemas/Profile'
+    NavigationStep:
+      type: object
+      properties:
+        name:
+          type: string
+        distance:
+          $ref: '#/components/schemas/Distance'
+        duration:
+          $ref: '#/components/schemas/Duration'
+        geometry:
+          $ref: '#/components/schemas/Geometry'
+        rotaryName:
+          type: string
+        bearingAfter:
+          type: number
+          format: float
+        exit:
+          type: string
+        instruction:
+          type: string
+        modifier:
+          type: string
+        type:
+          type: string
+        startLocation:
+          $ref: '#/components/schemas/Location'
+    NavigationLeg:
+      type: object
+      properties:
+        summary:
+          type: string
+        distance:
+          $ref: '#/components/schemas/Distance'
+        duration:
+          $ref: '#/components/schemas/Duration'
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationStep'
+    NavigationRoute:
+      type: object
+      properties:
+        legs:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationLeg'
+        geometry:
+          $ref: '#/components/schemas/Geometry'
+        distance:
+          type: number
+          format: float
+        duration:
+          type: number
+          format: float
+    NavigationSuccessResponse:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavigationRoute'
+    NearestRequest:
+      type: object
+      required:
+        - location
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+    NearestSuccessResponse:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+    MatchingRequest:
+      type: object
+      required:
+        - locations
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+    MatchingSuccessResponse:
+      type: object
+      properties:
+        matchedLocations:
+          type: array
+          items:
+            type: object
+            properties:
+              location:
+                $ref: '#/components/schemas/Location'
+              originalIndex:
+                type: integer
+                format: int64
+        geometry:
+          type: string
+    TSPRequest:
+      type: object
+      required:
+        - locations
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        profile:
+          $ref: '#/components/schemas/ProfileBikeCar'
+        roundTrip:
+          type: boolean
+    TSPSuccessResponse:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            type: object
+            properties:
+              location:
+                $ref: '#/components/schemas/Location'
+              index:
+                type: integer
+                format: int64
+    SearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        query:
+          type: string
+          description: Query Text
+    SearchAddress:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        title:
+          type: string
+        subtitle:
+          type: string
+        city:
+          $ref: '#/components/schemas/Region'
+        province:
+          $ref: '#/components/schemas/Region'
+    SearchSuccessResponse:
+      type: object
+      properties:
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchAddress'
+    SubdivisionRequest:
+      type: object
+      required:
+        - location
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+    SubdivisionSuccessResponse:
+      type: object
+      properties:
+        city:
+          $ref: '#/components/schemas/Region'
+        province:
+          $ref: '#/components/schemas/Region'
+        subCity:
+          $ref: '#/components/schemas/Region'
+    ActiveZoneRequest:
+      type: object
+      required:
+        - location
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+    ActiveZoneSuccessResponse:
+      type: object
+      properties:
+        zone:
+          type: object
+          properties:
+            locationActiveZones:
+              type: array
+              items:
+                type: string
+                enum:
+                  - LIMITED_TRAFFIC
+                  - LOW_EMISSION
+            city:
+              type: string
+            cityActiveZones:
+              type: array
+              items:
+                type: string
+                enum:
+                  - LIMITED_TRAFFIC
+                  - LOW_EMISSION
+    ReverseGeocodingRequest:
+      type: object
+      required:
+        - location
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+    ReverseGeocodingResponse:
+      type: object
+      properties:
+        address:
+          type: string
+        neighborhood:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        county:
+          type: object
+          properties:
+            name:
+              type: string
+        district:
+          type: object
+          properties:
+            name:
+              type: string
+        lastRoadName:
+          type: string
+    CellTower:
+      type: object
+      required:
+        - cellId
+        - locationAreaCode
+        - mobileCountryCode
+        - mobileNetworkCode
+        - signalStrength
+        - radioType
+        - isRegistered
+      properties:
+        cellId:
+          type: string
+        locationAreaCode:
+          type: integer
+        mobileCountryCode:
+          type: integer
+        mobileNetworkCode:
+          type: integer
+        signalStrength:
+          type: number
+          format: double
+        radioType:
+          type: string
+          enum:
+            - RADIO_TYPE_UNSPECIFIED
+            - RADIO_TYPE_GSM
+            - RADIO_TYPE_CDMA
+            - RADIO_TYPE_WCDMA
+            - RADIO_TYPE_LTE
+            - RADIO_TYPE_NR
+        isRegistered:
+          type: boolean
+        ageMs:
+          type: integer
+    WifiAccessPoint:
+      type: object
+      required:
+        - ssid
+        - bssid
+        - signalStrength
+        - frequency
+      properties:
+        ssid:
+          type: string
+        bssid:
+          type: string
+        signalStrength:
+          type: number
+          format: double
+        frequency:
+          type: integer
+        ageMs:
+          type: integer
+    GeoLocation:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - accuracy
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        accuracy:
+          type: number
+          format: double
+        ageMs:
+          type: integer
+    GeolocateRequest:
+      type: object
+      required:
+        - cellTowers
+        - wifiAccessPoints
+      properties:
+        cellTowers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CellTower'
+        wifiAccessPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/WifiAccessPoint'
+        gpsLocation:
+          $ref: '#/components/schemas/GeoLocation'
+        networkLocation:
+          $ref: '#/components/schemas/GeoLocation'
+    GeolocateResponse:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        accuracy:
+          type: number
+          format: double

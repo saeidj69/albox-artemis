@@ -1,0 +1,28 @@
+---
+description: Index of project architecture and quality rules
+alwaysApply: true
+---
+
+# Rules Index
+
+Use these rule files together:
+
+- `component-system.mdc`
+- `architecture-boundaries.mdc`
+- `app-router-conventions.mdc`
+- `feature-module-conventions.mdc`
+- `shared-ui-conventions.mdc`
+- `styles-conventions.mdc`
+- `api-generated-boundary.mdc`
+- `auth-server-guard-conventions.mdc`
+- `testing-conventions.mdc`
+- `naming-import-casing.mdc`
+
+When rules conflict, prioritize:
+1) `api-generated-boundary.mdc`
+2) `architecture-boundaries.mdc`
+3) file-specific conventions
+
+Primary structure reference for module scopes:
+
+- `src/modules/auth` (pages + atoms + layout + types + utils)

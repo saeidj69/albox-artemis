@@ -1,0 +1,20 @@
+---
+description: Naming, casing, and import consistency rules
+alwaysApply: true
+---
+
+# Naming and Import Casing
+
+- Use lower-case domain folder names for module scopes.
+- Keep import path casing exactly aligned with filesystem casing.
+- Prefer `@/` alias for internal imports.
+
+## Required patterns
+
+- Keep naming consistent for route segments and module folders.
+- Enforce no ambiguous path variants (`Auth` vs `auth`, `Layout` vs `layout`).
+
+## Prohibited patterns
+
+- Mixed-case imports targeting the same module path.
+- Introducing duplicate folder names that differ only by case.

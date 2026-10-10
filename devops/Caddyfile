@@ -1,0 +1,28 @@
+{
+  # Optional: nicer logs in Docker
+  log {
+    output stdout
+    format console
+  }
+}
+
+# Redirect plain HTTP to HTTPS
+:80 {
+  redir https://{host}{uri}
+}
+
+(app_common) {
+  encode zstd gzip
+  header {
+    # Add any headers you like here (CORS, security, etc.)
+    # Example CORS for credentials from app to api (adjust as needed):
+    # Access-Control-Allow-Origin https://client.developer-tools.ir
+    # Access-Control-Allow-Credentials true
+  }
+}
+
+client.developer-tools.ir {
+  import app_common
+  tls /certs/cert.pem /certs/key.pem
+  reverse_proxy web:3000
+}

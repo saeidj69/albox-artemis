@@ -1,0 +1,135 @@
+name: Build Image
+
+on:
+  push:
+    tags:
+      - 'v*.*.*-prd'
+      - 'v*.*.*-dev'
+
+env:
+  GIT_SSL_NO_VERIFY: 'true'
+  NODE_TLS_REJECT_UNAUTHORIZED: '0'
+
+jobs:
+  build:
+    env:
+      GIT_SSL_NO_VERIFY: 'true'
+      NODE_TLS_REJECT_UNAUTHORIZED: '0'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        env:
+          GIT_SSL_NO_VERIFY: 'true'
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+        uses: https://git.devsdev.ir/std/checkout@v4
+
+      - name: Install pnpm & dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
+
+      - name: Run Lint
+        run: pnpm lint
+
+      - name: Run Unit & Component Tests
+        run: pnpm test
+
+      - name: Show tag
+        env:
+          TAG_NAME: ${{ gitea.ref_name }}
+        run: |
+          echo "Building for tag: $TAG_NAME"
+
+      - name: Docker info
+        run: docker info
+
+      - name: Docker login
+        env:
+          REGISTRY: ${{ vars.REGISTRY }}
+          REGISTRY_USER: ${{ vars.REGISTRY_USER }}
+          REGISTRY_PASS: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          docker login \
+            -u "$REGISTRY_USER" \
+            -p "$REGISTRY_PASS" \
+            "$REGISTRY"
+
+      - name: Determine dockerfile
+        env:
+          TAG_NAME: ${{ gitea.ref_name }}
+        run: |
+          if [[ "$TAG_NAME" == *-prd ]]; then
+            echo "DOCKERFILE=devops/prod.Dockerfile" >> $GITHUB_ENV
+            export DOCKERFILE=devops/prod.Dockerfile
+          elif [[ "$TAG_NAME" == *-dev ]]; then
+            echo "DOCKERFILE=devops/stage.Dockerfile" >> $GITHUB_ENV
+            export DOCKERFILE=devops/stage.Dockerfile
+          fi
+
+      - name: Build image
+        env:
+          REGISTRY_IMG: ${{ vars.REGISTRY_IMAGE }}
+          TAG_NAME: ${{ gitea.ref_name }}
+          NPM_MIRROR: ${{ vars.NPM_MIRROR }}
+          APT_MIRROR: ${{ vars.APT_MIRROR }}
+        run: |
+          docker build \
+            --cache-from "$REGISTRY_IMG:latest" \
+            -f "$DOCKERFILE" \
+            --build-arg NPM_MIRROR="$NPM_MIRROR" \
+            --build-arg APT_MIRROR="$APT_MIRROR" \
+            --build-arg DEPLOYMENT_TAG="$TAG_NAME" \
+            -t "$REGISTRY_IMG:$TAG_NAME" \
+            .
+
+      - name: Push versioned image
+        env:
+          REGISTRY_IMG: ${{ vars.REGISTRY_IMAGE }}
+          TAG_NAME: ${{ gitea.ref_name }}
+        run: docker push "$REGISTRY_IMG:$TAG_NAME"
+
+      - name: Push latest image
+        env:
+          REGISTRY_IMG: ${{ vars.REGISTRY_IMAGE }}
+          TAG_NAME: ${{ gitea.ref_name }}
+        run: |
+          if [[ "$TAG_NAME" == *-prd ]]; then
+            docker tag "$REGISTRY_IMG:$TAG_NAME" "$REGISTRY_IMG:latest"
+            docker push "$REGISTRY_IMG:latest"
+          fi
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: deploy
+
+    steps:
+      - name: Determine deploy key
+        env:
+          TAG_NAME: ${{ gitea.ref_name }}
+        run: |
+          if [[ "$TAG_NAME" == *-prd ]]; then
+            echo "DEPLOY_KEY=artemis-prd" >> $GITHUB_ENV
+          elif [[ "$TAG_NAME" == *-dev ]]; then
+            echo "DEPLOY_KEY=artemis-dev" >> $GITHUB_ENV
+          fi
+
+      - name: PUT Prod Tag in Key Value Store
+        env:
+          TAG_NAME: ${{ gitea.ref_name }}
+          KV_STORE_BASE_URL: ${{ vars.KV_STORE_BASE_URL }}
+          KB_STORE_TOKEN: ${{ secrets.KB_STORE_TOKEN }}
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "$KV_STORE_BASE_URL/$DEPLOY_KEY" \
+            -H "Authorization: Bearer $KB_STORE_TOKEN" \
+            --data "$TAG_NAME")
+
+          if [ "$response" -ne 200 ]; then
+            echo "❌ Deployment failed! HTTP status: $response"
+            exit 1
+          fi

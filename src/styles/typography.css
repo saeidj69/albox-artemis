@@ -1,0 +1,119 @@
+@utility typo-title-x-large {
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 54px;
+}
+
+@utility typo-title-large {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 36px;
+}
+
+@utility typo-title-medium {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+}
+
+@utility typo-title-small {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+@utility typo-title-x-small {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+@utility typo-subtitle-x-large {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 36px;
+}
+
+@utility typo-subtitle-large {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+@utility typo-subtitle-medium {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+}
+
+@utility typo-subtitle-small {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+@utility typo-subtitle-x-small {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+@utility typo-body-x-large {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+@utility typo-body-large {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+@utility typo-body-medium {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+@utility typo-body-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+@utility typo-body-x-small {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+@utility typo-label-x-large {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+}
+
+@utility typo-label-large {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+@utility typo-label-medium {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+@utility typo-label-small {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+@utility typo-label-x-small {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 15px;
+}

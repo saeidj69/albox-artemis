@@ -1,0 +1,23 @@
+---
+description: Shared UI primitive/composite ownership rules
+globs: src/{components,lib}/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Shared UI Conventions
+
+- Keep primitives in `src/lib`.
+- Keep composites in `src/components`.
+- Promote module-specific UI into shared only after reuse in at least two module scopes.
+
+## Required patterns
+
+- Primitives stay generic and theme-driven.
+- Composites avoid feature-specific business logic.
+- Shared layers must remain consumable by `src/modules/*`.
+
+## Prohibited patterns
+
+- Feature data fetching directly inside generic UI primitives.
+- App-wide layout assumptions hardcoded inside shared components.
+- Imports from `src/modules/*` inside `src/components` or `src/lib`.

@@ -1,0 +1,23 @@
+---
+description: App router conventions with module pages
+globs: src/app/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# App Router Conventions
+
+- `src/app` contains routing concerns only: `page`, `layout`, metadata, and server actions.
+- Keep route files minimal; delegate to module pages in `src/modules/<scope>/pages/*`.
+- Use global boundaries at app root when possible (`src/app/loading.tsx`, `src/app/error.tsx`, `src/app/not-found.tsx`).
+
+## Required patterns
+
+- Redirect/auth checks in server layout/page boundaries where possible.
+- Keep route segment naming consistent and lower-case.
+- Prefer direct imports to module page files, no route-entry intermediates.
+
+## Prohibited patterns
+
+- Large feature-specific UI trees directly inside route files.
+- Business state orchestration spread across multiple `page.tsx` files.
+- Route imports that depend on `route-entry` folders.

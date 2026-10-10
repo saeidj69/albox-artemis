@@ -1,0 +1,698 @@
+openapi: 3.0.0
+info:
+  title: Tyche API
+  description: |-
+    Bearer token or session cookie authentication.
+
+    Prefer `Authorization: Bearer <token>` for API clients and Swagger/Scalar try-it-out.
+    Browser sessions use the `__Host-sessid-{scope}` cookie (scope from the `X-Auth-Scope`
+    header, default `client`); the `__Host-` prefix requires HTTPS and the cookie is
+    `HttpOnly`, so it can only be used when the browser sets it itself.
+  version: 0.0.0
+tags:
+  - name: Client
+paths:
+  /client/v1/balance:
+    get:
+      operationId: getClientBalance
+      summary: Get ticket balance
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client.BalanceResponse'
+      tags:
+        - Client
+  /client/v1/games:
+    get:
+      operationId: listClientGames
+      summary: List playable games
+      description: Returns the games that can currently be played.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client.GamesResponse'
+      tags:
+        - Client
+  /client/v1/games/{game}:
+    get:
+      operationId: getClientGame
+      summary: Get game details
+      parameters:
+        - name: game
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            minimum: 1
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client.GameResponse'
+      tags:
+        - Client
+  /client/v1/games/{game}/play:
+    post:
+      operationId: playClientGame
+      summary: Play a game
+      description: Creates or replays an idempotent game play. Authentication is supplied automatically by the HTTP-only session cookie.
+      parameters:
+        - name: game
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: uint64
+            minimum: 1
+        - name: idempotencyKey
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client.PlayResponse'
+      tags:
+        - Client
+  /client/v1/grant-rules:
+    get:
+      operationId: listClientGrantRules
+      summary: List active ticket grant rules
+      description: Returns grant rules currently visible to clients, ordered by display priority and then ID.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client.GrantRulesResponse'
+      tags:
+        - Client
+  /client/v1/plays:
+    get:
+      operationId: listClientPlays
+      summary: List plays
+      description: Returns plays ordered from most recent to oldest.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: uint8
+            minimum: 1
+            maximum: 50
+            default: 20
+          explode: false
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+        - name: gameId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: uint64
+            minimum: 1
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client.PlaysResponse'
+      tags:
+        - Client
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
+components:
+  schemas:
+    Client.AllocationAttributes:
+      type: object
+      description: Allocation metadata reserved for reward-specific allocation details. It is currently empty.
+    Client.BalanceResponse:
+      type: object
+      required:
+        - balance
+      properties:
+        balance:
+          type: integer
+          format: uint64
+      example:
+        balance: 5
+    Client.CreatedPlay:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Client.PlayBase'
+      description: A newly created play. `ticketCost` is the number of tickets charged for this play.
+    Client.Game:
+      $ref: '#/components/schemas/Client.WheelOfFortuneGame'
+    Client.GameBadge:
+      type: object
+      required:
+        - text
+        - color
+        - backgroundColor
+      properties:
+        text:
+          type: string
+        color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        backgroundColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+    Client.GameBase:
+      type: object
+      required:
+        - id
+        - shortDescription
+        - type
+        - icon
+        - ticketCost
+        - startedAt
+        - endedAt
+        - badges
+      properties:
+        id:
+          $ref: '#/components/schemas/ResourceId'
+        shortDescription:
+          type: string
+        type:
+          $ref: '#/components/schemas/Client.GameType'
+        icon:
+          type: string
+          format: uri
+        ticketCost:
+          type: integer
+          format: uint64
+          minimum: 1
+        startedAt:
+          $ref: '#/components/schemas/DateTimeString'
+        endedAt:
+          $ref: '#/components/schemas/DateTimeString'
+        badges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client.GameBadge'
+          description: Badges currently applicable to this game for the authenticated client. An empty array means no badge applies.
+    Client.GameDetails:
+      $ref: '#/components/schemas/Client.WheelOfFortuneGameDetails'
+    Client.GameResponse:
+      type: object
+      required:
+        - game
+      properties:
+        game:
+          $ref: '#/components/schemas/Client.GameDetails'
+    Client.GameType:
+      type: string
+      enum:
+        - wheel_of_fortune
+    Client.GamesResponse:
+      type: object
+      required:
+        - games
+      properties:
+        games:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client.Game'
+    Client.GiftBalanceReward:
+      type: object
+      required:
+        - rewardType
+        - attributes
+      properties:
+        rewardType:
+          type: string
+          enum:
+            - gift_balance
+        attributes:
+          $ref: '#/components/schemas/Client.GiftBalanceRewardAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.RewardBase'
+      example:
+        id: 100
+        rewardType: gift_balance
+        rarity: legendary
+        icon: https://server.local/public/gift.png
+        shortTitle: ۱۰۰ میلیون تومان
+        description: ۱۰۰ میلیون تومان شارژ کیف پول هدیه
+        attributes:
+          amount: 1000000000
+    Client.GiftBalanceRewardAttributes:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          type: integer
+          format: uint64
+          minimum: 10000
+          maximum: 10000000000
+      description: Gift-wallet balance reward attributes. `amount` is expressed in rials.
+    Client.GiftBalanceWheelSlot:
+      type: object
+      required:
+        - rewardType
+        - attributes
+      properties:
+        rewardType:
+          type: string
+          enum:
+            - gift_balance
+        attributes:
+          $ref: '#/components/schemas/Client.GiftBalanceRewardAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.WheelOfFortuneSlotBase'
+      example:
+        position: 0
+        rewardId: 100
+        rewardType: gift_balance
+        rarity: legendary
+        icon: https://server.local/public/gift.png
+        shortTitle: ۱۰۰ میلیون تومان
+        description: ۱۰۰ میلیون تومان شارژ کیف پول هدیه
+        attributes:
+          amount: 1000000000
+    Client.GrantRule:
+      type: object
+      required:
+        - id
+        - shortDescription
+        - description
+        - icon
+        - startedAt
+        - endedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ResourceId'
+        shortDescription:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+          format: uri
+        startedAt:
+          $ref: '#/components/schemas/DateTimeString'
+        endedAt:
+          $ref: '#/components/schemas/DateTimeString'
+    Client.GrantRulesResponse:
+      type: object
+      required:
+        - grantRules
+      properties:
+        grantRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client.GrantRule'
+    Client.NaughtReward:
+      type: object
+      required:
+        - rewardType
+        - attributes
+      properties:
+        rewardType:
+          type: string
+          enum:
+            - naught
+        attributes:
+          $ref: '#/components/schemas/Client.NaughtRewardAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.RewardBase'
+      example:
+        id: 101
+        rewardType: naught
+        rarity: shit
+        icon: https://server.local/public/naught.png
+        shortTitle: پوچ
+        description: پوچ
+        attributes: {}
+    Client.NaughtRewardAttributes:
+      type: object
+      description: A no-prize reward has no additional attributes.
+    Client.NaughtWheelSlot:
+      type: object
+      required:
+        - rewardType
+        - attributes
+      properties:
+        rewardType:
+          type: string
+          enum:
+            - naught
+        attributes:
+          $ref: '#/components/schemas/Client.NaughtRewardAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.WheelOfFortuneSlotBase'
+      example:
+        position: 1
+        rewardId: 101
+        rewardType: naught
+        rarity: shit
+        icon: https://server.local/public/naught.png
+        shortTitle: پوچ
+        description: پوچ
+        attributes: {}
+    Client.PlayBase:
+      type: object
+      required:
+        - id
+        - ticketCost
+        - game
+        - reward
+        - allocationAttributes
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ResourceId'
+        ticketCost:
+          type: integer
+          format: uint64
+        game:
+          $ref: '#/components/schemas/Client.Game'
+        reward:
+          $ref: '#/components/schemas/Client.Reward'
+        allocationAttributes:
+          $ref: '#/components/schemas/Client.AllocationAttributes'
+        createdAt:
+          $ref: '#/components/schemas/DateTimeString'
+    Client.PlayHistoryItem:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Client.PlayBase'
+      description: A play returned by the play-history endpoint.
+    Client.PlayResponse:
+      type: object
+      required:
+        - play
+      properties:
+        play:
+          $ref: '#/components/schemas/Client.CreatedPlay'
+    Client.PlaysResponse:
+      type: object
+      required:
+        - plays
+        - nextCursor
+      properties:
+        plays:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client.PlayHistoryItem'
+        nextCursor:
+          type: string
+          nullable: true
+    Client.Reward:
+      oneOf:
+        - $ref: '#/components/schemas/Client.GiftBalanceReward'
+        - $ref: '#/components/schemas/Client.NaughtReward'
+        - $ref: '#/components/schemas/Client.TicketsReward'
+    Client.RewardBase:
+      type: object
+      required:
+        - id
+        - rarity
+      properties:
+        id:
+          $ref: '#/components/schemas/ResourceId'
+        rarity:
+          $ref: '#/components/schemas/Client.RewardRarity'
+      allOf:
+        - $ref: '#/components/schemas/Client.RewardPresentation'
+    Client.RewardPresentation:
+      type: object
+      required:
+        - icon
+        - shortTitle
+        - description
+      properties:
+        icon:
+          type: string
+          format: uri
+        shortTitle:
+          type: string
+        description:
+          type: string
+    Client.RewardRarity:
+      type: string
+      enum:
+        - shit
+        - common
+        - rare
+        - legendary
+        - mythic
+    Client.RewardType:
+      type: string
+      enum:
+        - gift_balance
+        - naught
+        - tickets
+    Client.TicketsReward:
+      type: object
+      required:
+        - rewardType
+        - attributes
+      properties:
+        rewardType:
+          type: string
+          enum:
+            - tickets
+        attributes:
+          $ref: '#/components/schemas/Client.TicketsRewardAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.RewardBase'
+      example:
+        id: 102
+        rewardType: tickets
+        rarity: legendary
+        icon: https://server.local/public/ticket.png
+        shortTitle: ۵ تیکت اضافه
+        description: ۵ تیکت اضافه
+        attributes:
+          amount: 5
+          expiryHours: 24
+    Client.TicketsRewardAttributes:
+      type: object
+      required:
+        - amount
+        - expiryHours
+      properties:
+        amount:
+          type: integer
+          format: uint64
+          minimum: 1
+        expiryHours:
+          type: integer
+          format: uint64
+          minimum: 1
+      description: Ticket reward attributes. `amount` is the number of tickets awarded.
+    Client.TicketsWheelSlot:
+      type: object
+      required:
+        - rewardType
+        - attributes
+      properties:
+        rewardType:
+          type: string
+          enum:
+            - tickets
+        attributes:
+          $ref: '#/components/schemas/Client.TicketsRewardAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.WheelOfFortuneSlotBase'
+      example:
+        position: 2
+        rewardId: 102
+        rewardType: tickets
+        rarity: legendary
+        icon: https://server.local/public/ticket.png
+        shortTitle: ۵ تیکت اضافه
+        description: ۵ تیکت اضافه
+        attributes:
+          amount: 5
+          expiryHours: 24
+    Client.WheelOfFortuneGame:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - wheel_of_fortune
+      allOf:
+        - $ref: '#/components/schemas/Client.GameBase'
+      example:
+        id: 1
+        shortDescription: گردونه شانس
+        type: wheel_of_fortune
+        icon: https://server.local/media/x708h0f24fa.png
+        ticketCost: 1
+        startedAt: '2026-07-01T00:00:00+03:30'
+        endedAt: '2026-08-01T00:00:00+03:30'
+        badges:
+          - text: ''
+            color: '#453456'
+            backgroundColor: '#494949'
+    Client.WheelOfFortuneGameAttributes:
+      type: object
+      required:
+        - slots
+      properties:
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client.WheelOfFortuneSlot'
+    Client.WheelOfFortuneGameDetails:
+      type: object
+      required:
+        - type
+        - attributes
+      properties:
+        type:
+          type: string
+          enum:
+            - wheel_of_fortune
+        attributes:
+          $ref: '#/components/schemas/Client.WheelOfFortuneGameAttributes'
+      allOf:
+        - $ref: '#/components/schemas/Client.GameBase'
+      example:
+        id: 1
+        shortDescription: گردونه شانس
+        type: wheel_of_fortune
+        icon: https://server.local/media/x708h0f24fa.png
+        ticketCost: 1
+        startedAt: '2026-07-01T00:00:00+03:30'
+        endedAt: '2026-08-01T00:00:00+03:30'
+        badges:
+          - text: ''
+            color: '#453456'
+            backgroundColor: '#494949'
+        attributes:
+          slots:
+            - position: 0
+              rewardId: 100
+              rewardType: gift_balance
+              rarity: legendary
+              icon: https://server.local/public/gift.png
+              shortTitle: ۱۰۰ میلیون تومان
+              description: ۱۰۰ میلیون تومان شارژ کیف پول هدیه
+              attributes:
+                amount: 1000000000
+            - position: 1
+              rewardId: 101
+              rewardType: naught
+              rarity: shit
+              icon: https://server.local/public/naught.png
+              shortTitle: پوچ
+              description: پوچ
+              attributes: {}
+            - position: 2
+              rewardId: 102
+              rewardType: tickets
+              rarity: legendary
+              icon: https://server.local/public/ticket.png
+              shortTitle: ۵ تیکت اضافه
+              description: ۵ تیکت اضافه
+              attributes:
+                amount: 5
+                expiryHours: 24
+            - position: 3
+              rewardId: 101
+              rewardType: naught
+              rarity: shit
+              icon: https://server.local/public/naught.png
+              shortTitle: پوچ
+              description: پوچ
+              attributes: {}
+            - position: 4
+              rewardId: 100
+              rewardType: gift_balance
+              rarity: legendary
+              icon: https://server.local/public/gift.png
+              shortTitle: ۲۵۰,۰۰۰ تومان
+              description: ۲۵۰,۰۰۰ تومان شارژ کیف پول هدیه
+              attributes:
+                amount: 2500000
+            - position: 5
+              rewardId: 101
+              rewardType: naught
+              rarity: shit
+              icon: https://server.local/public/naught.png
+              shortTitle: پوچ
+              description: پوچ
+              attributes: {}
+    Client.WheelOfFortuneSlot:
+      oneOf:
+        - $ref: '#/components/schemas/Client.GiftBalanceWheelSlot'
+        - $ref: '#/components/schemas/Client.NaughtWheelSlot'
+        - $ref: '#/components/schemas/Client.TicketsWheelSlot'
+    Client.WheelOfFortuneSlotBase:
+      type: object
+      required:
+        - position
+        - rewardId
+        - rarity
+      properties:
+        position:
+          type: integer
+          format: uint16
+        rewardId:
+          $ref: '#/components/schemas/ResourceId'
+        rarity:
+          $ref: '#/components/schemas/Client.RewardRarity'
+      allOf:
+        - $ref: '#/components/schemas/Client.RewardPresentation'
+    DateTimeString:
+      type: string
+      format: date-time
+      example: '2026-07-01T00:00:00+03:30'
+    ResourceId:
+      type: integer
+      format: uint64
+      minimum: 1
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+    ApiKeyAuth:
+      type: apiKey
+      in: cookie
+      name: __Host-sessid-client
+servers:
+  - url: http://localhost:8000/tyche/api
+    description: Local
+    variables: {}
+  - url: https://jupiter.allbox.work/tyche/api
+    description: Development
+    variables: {}
+  - url: https://api-allbox.surenamarkets.com/tyche/api
+    description: Production
+    variables: {}

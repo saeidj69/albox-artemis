@@ -1,0 +1,22 @@
+---
+description: Auth guard strategy without Next middleware
+globs: src/app/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Auth Server Guard Conventions
+
+- Do not introduce auth checks in `middleware.ts`.
+- Prefer server layout/page checks with redirect-before-render for protected routes.
+- Keep auth UI/state conventions aligned with `src/modules/auth` structure.
+
+## Required patterns
+
+- Keep protected route behavior centralized in protected layout/page boundaries.
+- Keep auth state in `src/modules/auth/atoms` and auth helpers in `src/modules/auth/utils`.
+
+## Prohibited patterns
+
+- Per-request middleware auth validation.
+- Duplicated auth redirect logic across many client pages.
+- Scattering auth logic outside module scope when it belongs to `src/modules/auth`.

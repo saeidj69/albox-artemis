@@ -1,0 +1,12 @@
+allowBuilds:
+  '@sentry/cli': true
+  core-js: true
+  esbuild: true
+  msw: true
+  sharp: true
+  unrs-resolver: true
+
+minimumReleaseAge: 14400
+
+registries:
+  default: https://nexus.allbox.work/repository/npm-proxy

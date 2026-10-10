@@ -1,0 +1,92 @@
+stages:
+  - test
+  - build
+  - deploy
+
+.node_job:
+  image: reg.allbox.work/base-images/node:22-bookworm-slim
+  variables:
+    GIT_DEPTH: '1'
+    NPM_MIRROR: 'https://nexus.allbox.work/repository/npm-proxy'
+  before_script:
+    - npm set registry "$NPM_MIRROR"
+    - corepack enable
+    - corepack prepare pnpm@11.1.3 --activate
+    - pnpm install --frozen-lockfile --ignore-scripts
+  tags:
+    - docker
+  only:
+    - merge_requests
+    - tags
+
+Test:
+  extends: .node_job
+  stage: test
+  script:
+    - if [ -n "$CI_MERGE_REQUEST_IID" ]; then pnpm lint; fi
+    - pnpm test:coverage -- --reporter=dot
+  coverage: '/Statements\s*:\s*([\d.]+)%/'
+
+.build_template:
+  stage: build
+  image: docker:29.0.4
+  variables:
+    BUILDKIT_NO_CLIENT_TOKEN: '1'
+    NPM_MIRROR: 'https://nexus.allbox.work/repository/npm-proxy'
+  script:
+    - docker info
+    - docker login -u "$HARBOR_USER" -p "$HARBOR_PASSWORD" $HARBOR_REGISTRY
+    - >
+      docker build
+      --cache-from "$HARBOR_REGISTRY/$CI_PROJECT_NAME/$CI_PROJECT_NAME":latest
+      -f $CI_PROJECT_DIR/devops/$DOCKERFILE
+      --build-arg NPM_MIRROR="$NPM_MIRROR"
+      --build-arg DEPLOYMENT_TAG="$CI_COMMIT_TAG"
+      --build-arg GIT_SHA="$CI_COMMIT_SHA"
+      --secret id=sentry_auth_token,env=SENTRY_AUTH_TOKEN
+      -t "$HARBOR_REGISTRY/$CI_PROJECT_NAME/$CI_PROJECT_NAME":$CI_COMMIT_TAG
+      -t "$HARBOR_REGISTRY/$CI_PROJECT_NAME/$CI_PROJECT_NAME":latest
+      .
+    - docker push "$HARBOR_REGISTRY/$CI_PROJECT_NAME/$CI_PROJECT_NAME":"$CI_COMMIT_TAG"
+    - docker push "$HARBOR_REGISTRY/$CI_PROJECT_NAME/$CI_PROJECT_NAME":latest
+  tags:
+    - docker
+    - build
+
+.deploy_template:
+  stage: deploy
+  image: docker:29.0.4
+  script:
+    - docker login -u "$HARBOR_USER" -p "$HARBOR_PASSWORD" $HARBOR_REGISTRY
+    - cd /opt/applications/artemis
+    - sed -i "s|^ARTEMIS_TAG=.*|ARTEMIS_TAG=${CI_COMMIT_TAG}|" .env
+    - docker compose up -d
+  tags:
+    - deploy
+
+Build_Stage:
+  extends: .build_template
+  variables:
+    DOCKERFILE: stage.Dockerfile
+  only:
+    - /^v\d{1,9}\.\d{1,9}\.\d{1,9}-[d][e][v]$/
+
+Deploy_Stage:
+  extends: .deploy_template
+  only:
+    - /^v\d{1,9}\.\d{1,9}\.\d{1,9}-[d][e][v]$/
+
+Build_Prod:
+  extends: .build_template
+  variables:
+    DOCKERFILE: prod.Dockerfile
+  only:
+    - /^v\d{1,9}\.\d{1,9}\.\d{1,9}-[p][r][d]$/
+
+Deploy_Prod:
+  extends: .deploy_template
+  tags:
+    - prod_deploy
+  only:
+    - /^v\d{1,9}\.\d{1,9}\.\d{1,9}-[p][r][d]$/
+  when: manual

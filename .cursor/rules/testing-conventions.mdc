@@ -1,0 +1,20 @@
+---
+description: Baseline testing expectations for critical flows
+alwaysApply: true
+---
+
+# Testing Conventions
+
+- Add tests for auth flow transitions and protected-route behavior.
+- Add tests for API error handling paths in critical user journeys.
+- Prioritize tests around `src/modules/auth/pages/login` and `src/modules/auth/pages/impersonate`.
+
+## Required patterns
+
+- New critical flows should include at least one happy-path and one failure-path test.
+- Keep tests close to module page ownership when possible.
+
+## Prohibited patterns
+
+- Refactors of critical flows with no regression tests.
+- Tests that rely on unrelated global state when local setup is possible.

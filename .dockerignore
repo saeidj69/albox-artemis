@@ -1,0 +1,10 @@
+.git
+node_modules
+.next
+devops
+.omc
+.claude
+.cursor
+*.md
+.env
+.env.*

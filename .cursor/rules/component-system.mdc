@@ -1,0 +1,70 @@
+---
+globs: src/lib/**/*
+alwaysApply: false
+---
+
+# Component system (src/lib)
+
+Use this guide when creating or editing UI components in `src/lib/`. These primitives are consumed by module pages (for example under `src/modules/auth/pages/*`).
+
+## File structure
+
+- **ComponentName.tsx** — Main component; export as `ComponentNameComponent` (or `XComponent`).
+- **ComponentName.Skeleton.tsx** — Skeleton placeholder; export as `ComponentNameSkeletonComponent`.
+- **index.ts** — Barrel: `export const ComponentName = Object.assign(ComponentNameComponent, { Skeleton: ComponentNameSkeletonComponent })` and re-export types.
+- **types.ts** — Props and skeleton props; use `ComponentPropsWithRef<'element'>` and slot types from variants.
+- **variants.ts** — `tv()` from `tailwind-variants`: `slots`, `variants`, `compoundVariants`, `defaultVariants`; export `XSlots` and `XSkeletonSlots`.
+
+## Slot system (tailwind-variants)
+
+- Every visual part of a component is a **named slot** in `tv({ slots: { ... } })`.
+- Default styles live in `slots`; state-dependent overrides in `variants` and `compoundVariants`.
+- Export slot names: `export type XSlots = keyof ReturnType<typeof xVariants>` (and `XSkeletonSlots` for skeleton).
+- No hardcoded `className` strings in JSX; every element uses `slots.slotName({ className: classNames?.slotName })`.
+
+## classNames prop
+
+- Type: `Partial<Record<XSlots, string>>` — **always** derived from the variant type, never a hand-written object.
+- Enables per-slot overrides without touching internals. Adding a slot in `variants.ts` automatically extends `classNames`.
+- Root also receives the top-level **className** prop, merged via `cn(className, classNames?.root)`.
+
+## data-slot attributes
+
+- Every rendered element has `data-slot="component-part"` (kebab-case).
+- Convention: root = `"component"`, children = `"component-part"` (e.g. `input`, `input-label`, `input-field`).
+- Unique per element; use for CSS targeting with `[data-slot="..."]`.
+
+## Variants
+
+- **Boolean variants** (e.g. `disabled`, `error`): use `true: { slotName: '...' }` in `variants`.
+- **String variants** (e.g. `variant`, `size`): use named keys and slot overrides.
+- **compoundVariants**: for combinations of variant values.
+- Always set **defaultVariants**.
+
+## React 19 ref
+
+- **ref** is a normal prop; do **not** use `forwardRef`.
+- Props type must extend `ComponentPropsWithRef<'element'>` so `ref` is included.
+- In the component, destructure `ref` from props and pass it to the underlying DOM node or Radix primitive.
+
+## Skeleton pattern
+
+- Each component that has a loading state exposes **Component.Skeleton**.
+- In **variants.ts**: add `xSkeletonVariants` with `tv({ slots: { ... } })` and `export type XSkeletonSlots = ...`.
+- In **types.ts**: add `XSkeletonProps` with `className?` and `classNames?: Partial<Record<XSkeletonSlots, string>>`.
+- **ComponentName.Skeleton.tsx** uses the shared `Skeleton` primitive and slot classes; export `ComponentNameSkeletonComponent`.
+- **index.ts**: `Object.assign(ComponentNameComponent, { Skeleton: ComponentNameSkeletonComponent })` and re-export all relevant types.
+
+## Polymorphic `as` prop
+
+- For components that can render as different elements (e.g. Button, Chip): accept `as?: C extends ElementType`.
+- Types: `OwnProps & { as?: C } & Omit<ComponentPropsWithRef<C>, keyof OwnProps>`.
+
+## Authoring checklist
+
+1. Define all parts as slots in `tv()` in **variants.ts**.
+2. Export **XSlots** (and **XSkeletonSlots** if applicable).
+3. Type **classNames** as `Partial<Record<XSlots, string>>`.
+4. Add **data-slot** to every rendered element.
+5. Use **ComponentPropsWithRef** and pass **ref** from props (no `forwardRef`).
+6. If the component has a loading state: add **xSkeletonVariants**, **XSkeletonProps**, **ComponentName.Skeleton.tsx**, and attach **Skeleton** in **index.ts** via **Object.assign**.

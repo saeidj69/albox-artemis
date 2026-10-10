@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="282" height="282" viewBox="0 0 282 282" fill="none">
+  <defs>
+    <radialGradient id="slice-0" cx="141" cy="141" r="136.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0000" stop-color="#967DE7"/><stop offset="0.0845" stop-color="#967DE7"/><stop offset="0.1029" stop-color="#A087EA"/><stop offset="0.1212" stop-color="#AD96ED"/><stop offset="0.9919" stop-color="#8966DF"/><stop offset="1.0000" stop-color="#8966DF"/>
+    </radialGradient>
+    <radialGradient id="slice-1" cx="141" cy="141" r="136.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0000" stop-color="#8160DD"/><stop offset="0.0845" stop-color="#8160DD"/><stop offset="0.1139" stop-color="#8E6DDE"/><stop offset="0.1212" stop-color="#9373E0"/><stop offset="0.2535" stop-color="#8969D5"/><stop offset="0.3857" stop-color="#7F5FC9"/><stop offset="0.8156" stop-color="#5D3FA5"/><stop offset="0.9919" stop-color="#7350C9"/><stop offset="1.0000" stop-color="#7350C9"/>
+    </radialGradient>
+    <radialGradient id="slice-2" cx="141" cy="141" r="136.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0000" stop-color="#977EE8"/><stop offset="0.0845" stop-color="#977EE8"/><stop offset="0.1139" stop-color="#A991ED"/><stop offset="0.1212" stop-color="#AF98EE"/><stop offset="0.8964" stop-color="#9C7BEA"/><stop offset="0.9919" stop-color="#AB90ED"/><stop offset="1.0000" stop-color="#AB90ED"/>
+    </radialGradient>
+    <radialGradient id="slice-4" cx="141" cy="141" r="136.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0000" stop-color="#957BE6"/><stop offset="0.0845" stop-color="#957BE6"/><stop offset="0.1139" stop-color="#A68EEB"/><stop offset="0.1212" stop-color="#AB94EC"/><stop offset="0.9735" stop-color="#8965DF"/><stop offset="0.9809" stop-color="#8B68E0"/><stop offset="0.9846" stop-color="#7B58D0"/><stop offset="0.9882" stop-color="#734FC9"/><stop offset="0.9919" stop-color="#7450CA"/><stop offset="1.0000" stop-color="#7450CA"/>
+    </radialGradient>
+    <radialGradient id="slice-6" cx="141" cy="141" r="136.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0.0000" stop-color="#977EE8"/><stop offset="0.0845" stop-color="#977EE8"/><stop offset="0.1139" stop-color="#A992ED"/><stop offset="0.1212" stop-color="#AF98EE"/><stop offset="0.9882" stop-color="#9C7CEA"/><stop offset="0.9919" stop-color="#8562D7"/><stop offset="1.0000" stop-color="#8562D7"/>
+    </radialGradient>
+    <linearGradient id="divider" x1="141" y1="141" x2="239.903" y2="240.087" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7C12B"/><stop offset=".173077" stop-color="#FFDA75"/><stop offset=".317308" stop-color="#F3E7C5"/><stop offset=".432692" stop-color="#FFDB75"/><stop offset=".567308" stop-color="#FAC329"/><stop offset=".735577" stop-color="#F9D673"/><stop offset=".865385" stop-color="#F3E7C5"/><stop offset="1" stop-color="#FFDD7C"/>
+    </linearGradient>
+    <linearGradient id="hub-ring" x1="133.876" y1="133.876" x2="150.545" y2="150.545" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F9DF7B"/><stop offset=".2038" stop-color="#B57E10"/><stop offset=".26431" stop-color="#B78114"/><stop offset=".3227" stop-color="#BF8C1F"/><stop offset=".38027" stop-color="#CB9E33"/><stop offset=".43731" stop-color="#DDB64E"/><stop offset=".49349" stop-color="#F3D671"/><stop offset=".50766" stop-color="#F9DF7B"/><stop offset=".51886" stop-color="#FFF3A6"/><stop offset=".59338" stop-color="#F9DF7B"/><stop offset=".84283" stop-color="#B57E10"/><stop offset=".9493" stop-color="#E5C35C"/><stop offset="1" stop-color="#F9DF7B"/>
+    </linearGradient>
+    <radialGradient id="hub-face" cx="141" cy="141" r="9" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E40A7"/><stop offset=".84" stop-color="#734FC9"/><stop offset="1" stop-color="#6142AC"/>
+    </radialGradient>
+    <clipPath id="face"><circle cx="141" cy="141" r="136.1"/></clipPath>
+  </defs>
+  <circle cx="141" cy="141" r="141" fill="#F7E3AB"/>
+  <circle cx="141" cy="141" r="137.25" fill="#FFE195"/>
+  <g clip-path="url(#face)">
+    <path d="M141 141L191.2473 13.4398A137.1 137.1 0 0 1 268.5602 90.7527Z" fill="url(#slice-1)"/>
+    <path d="M141 141L268.5602 191.2473A137.1 137.1 0 0 1 191.2473 268.5602Z" fill="url(#slice-1)"/>
+    <path d="M141 141L90.7527 268.5602A137.1 137.1 0 0 1 13.4398 191.2473Z" fill="url(#slice-1)"/>
+    <path d="M141 141L13.4398 90.7527A137.1 137.1 0 0 1 90.7527 13.4398Z" fill="url(#slice-1)"/>
+    <path d="M141 141L88.5341 14.3361A137.1 137.1 0 0 1 193.4659 14.3361Z" fill="url(#slice-0)"/>
+    <path d="M141 141L267.6639 88.5341A137.1 137.1 0 0 1 267.6639 193.4659Z" fill="url(#slice-2)"/>
+    <path d="M141 141L193.4659 267.6639A137.1 137.1 0 0 1 88.5341 267.6639Z" fill="url(#slice-4)"/>
+    <path d="M141 141L14.3361 193.4659A137.1 137.1 0 0 1 14.3361 88.5341Z" fill="url(#slice-6)"/>
+    <path d="M267.6639 193.4659L141 141L193.4659 267.6639" stroke="url(#divider)" stroke-width="3.25" stroke-linejoin="round"/>
+  </g>
+  <circle cx="141" cy="141" r="11" fill="url(#hub-ring)"/>
+  <circle cx="141" cy="141" r="9" fill="url(#hub-face)"/>
+</svg>
